@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold"><i class="fas fa-bug me-2"></i>Bugs</h2>
+    <a href="{% url 'combined_create' %}" class="btn btn-primary"><i class="fas fa-plus me-1"></i>Report Bug</a>
+</div>
+<div class="card shadow-lg border-0">
+    <div class="card-body p-0 bg-white text-dark">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-dark">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Category</th>
+                        <th>Created</th>
+                        <th>Fixes</th>
+                        <th>Fixed</th>
+                        <th>Logs</th>
+                        <th>Tools Used</th>
+                        <th>Media Files</th>
+                        <th>Code Files</th>
+                        <th>Websites</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bug in bugs %}
+                    <tr>
+                        <td class="fw-semibold text-dark">{{ bug.title }}</td>
+                        <td><span class="badge bg-warning text-dark">{{ bug.get_severity_display }}</span></td>
+                        <td><span class="badge bg-info text-dark">{{ bug.get_status_display }}</span></td>
+                        <td>{{ bug.get_category_display }}</td>
+                        <td>{{ bug.created_at|date:'Y-m-d H:i' }}</td>
+                        <td><a href="{% url 'bug_detail' bug.id %}" class="link-primary">{{ bug.successful_fixes.count }}</a></td>
+                        <td>
+                            {% if bug.successful_fixes.count %}
+                                <span class="badge bg-success"><i class="fas fa-check"></i> Fixed</span>
+                            {% else %}
+                                <span class="badge bg-danger"><i class="fas fa-times"></i> Not Fixed</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-truncate" style="max-width: 120px;"><span class="text-dark">{{ bug.logs|linebreaksbr }}</span></td>
+                        <td class="text-truncate" style="max-width: 120px;"><span class="text-dark">{{ bug.tools_used|linebreaksbr }}</span></td>
+                        <td>{{ bug.media_files.count }}</td>
+                        <td>{{ bug.code_files.count }}</td>
+                        <td>{{ bug.websites.count }}</td>
+                        <td>
+                            <a href="{% url 'bug_detail' bug.id %}" class="btn btn-sm btn-outline-secondary"><i class="fas fa-eye"></i> View</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="13" class="text-center text-muted">No bugs found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

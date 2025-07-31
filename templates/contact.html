@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5 loading">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header text-white text-center py-4"
+                    style="background: linear-gradient(135deg, var(--primary-navy) 0%, var(--accent-blue) 100%); border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-envelope-open-text me-2"></i>Contact Us</h2>
+                    <p class="mb-0 opacity-75">We're here to help. Reach out to us anytime.</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <div class="row g-5">
+                        <div class="col-md-6">
+                            <h4 class="mb-4 fw-bold" style="color: var(--primary-navy);"><i
+                                    class="fas fa-info-circle me-2"></i>Contact Information</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-envelope fa-fw me-3 mt-1" style="color: var(--accent-blue);"></i>
+                                    <div>
+                                        <strong class="d-block">Email</strong>
+                                        <a href="mailto:elite@hackerlab.com" class="text-decoration-none"
+                                            style="color: var(--accent-blue);">elite@hackerlab.com</a>
+                                    </div>
+                                </li>
+                                <li class="mb-3 d-flex align-items-start">
+                                    <i class="fas fa-phone-alt fa-fw me-3 mt-1" style="color: var(--accent-blue);"></i>
+                                    <div>
+                                        <strong class="d-block">Phone</strong>
+                                        <span class="text-muted">+1-555-ELITE</span>
+                                    </div>
+                                </li>
+                                <li class="d-flex align-items-start">
+                                    <i class="fas fa-map-marker-alt fa-fw me-3 mt-1"
+                                        style="color: var(--accent-blue);"></i>
+                                    <div>
+                                        <strong class="d-block">Location</strong>
+                                        <span class="text-muted">Secret Hacker Lab HQ</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 border-start ps-4">
+                            <h4 class="mb-4 fw-bold" style="color: var(--primary-navy);"><i
+                                    class="fas fa-paper-plane me-2"></i>Send Us a Message</h4>
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-success d-flex align-items-center shadow-sm" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <div>{{ message }}</div>
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg mt-3 fw-bold"
+                                        style="background: var(--primary-navy); border-color: var(--primary-navy); transition: all 0.3s ease;">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center bg-light py-3"
+                    style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <p class="mb-0 text-muted">We typically respond within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

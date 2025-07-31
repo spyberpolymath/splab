@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5 loading" style="background: #fff; border-radius: 1.5rem; box-shadow: 0 4px 24px rgba(26,54,93,0.08); padding: 2.5rem 2rem;">
+    <h1 class="mb-4 fw-bold text-center" style="color: var(--primary-navy);">
+        <i class="fas fa-tachometer-alt me-2"></i>Elite Hacker Lab Dashboard
+    </h1>
+    <form method="get" class="d-flex justify-content-center mb-5">
+        <label for="date_filter" class="me-2 fw-bold align-self-center">Filter by:</label>
+        <select name="date_filter" id="date_filter" class="form-select w-auto" onchange="this.form.submit()">
+            <option value="" {% if not current_date_filter %}selected{% endif %}>All</option>
+            <option value="day" {% if current_date_filter == 'day' %}selected{% endif %}>Today</option>
+            <option value="week" {% if current_date_filter == 'week' %}selected{% endif %}>This Week</option>
+            <option value="month" {% if current_date_filter == 'month' %}selected{% endif %}>This Month</option>
+            <option value="year" {% if current_date_filter == 'year' %}selected{% endif %}>This Year</option>
+        </select>
+    </form>
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 h-100"
+                style="border-radius: 1rem; background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);">
+                <div class="card-body text-center text-dark py-4">
+                    <div class="mb-3">
+                        <i class="fas fa-bug fa-3x" style="color: #d97706;"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Bugs</h5>
+                    <p class="display-4 fw-bold">{{ bug_count }}</p>
+                    <a href="{% url 'bug_list' %}" class="btn btn-outline-dark btn-lg mt-2"><i
+                            class="fas fa-eye me-1"></i>View Bugs</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-lg border-0 h-100"
+                style="border-radius: 1rem; background: linear-gradient(135deg, #ff5858 0%, #f09819 100%);">
+                <div class="card-body text-center text-white py-4">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-3x" style="color: #fff; opacity: 0.85;"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Successful Fixed</h5>
+                    <p class="display-4 fw-bold">{{ successful_fixed_count }}</p>
+                    <a href="{% url 'successful_fixed_list' %}" class="btn btn-outline-light btn-lg mt-2"><i
+                            class="fas fa-eye me-1"></i>View Successful Fixed</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card shadow border-0 mb-4" style="border-radius: 1rem;">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-center mb-4" style="color: #d97706;">Bugs Overview</h5>
+                    <div class="d-flex justify-content-center">
+                        <canvas id="bugsPieChart" height="180" style="max-width: 320px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 mb-4">
+            <div class="card shadow border-0 mb-4" style="border-radius: 1rem;">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-center mb-4" style="color: #ff5858;">Successful Fixed Overview</h5>
+                    <div class="d-flex justify-content-center">
+                        <canvas id="successPieChart" height="180" style="max-width: 320px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Bugs Pie Chart
+        var bugsPieCtx = document.getElementById('bugsPieChart').getContext('2d');
+        new Chart(bugsPieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Bugs', 'Other'],
+                datasets: [{
+                    data: ["{{ bug_count|add:0 }}", 1],
+                    backgroundColor: ['#f7971e', '#e2e8f0']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: true }, title: { display: false } }
+            }
+        });
+        // Successful Fixed Pie Chart
+        var successPieCtx = document.getElementById('successPieChart').getContext('2d');
+        new Chart(successPieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Successful Fixed', 'Other'],
+                datasets: [{
+                    data: ["{{ successful_fixed_count|add:0 }}", 1],
+                    backgroundColor: ['#ff5858', '#e2e8f0']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: true }, title: { display: false } }
+            }
+        });
+    });
+</script>
+{% endblock %}

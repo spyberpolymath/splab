@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card shadow-lg border-0 mb-4">
+            <div class="card-header bg-gradient" style="background: linear-gradient(90deg, var(--primary-navy), var(--accent-blue)); color: #000;">
+                <h4 class="mb-0"><i class="fas fa-bug me-2"></i>Bug Details</h4>
+            </div>
+            <div class="card-body bg-white text-dark">
+                <h3 class="fw-bold mb-3 text-primary">{{ bug.title }}</h3>
+                <div class="mb-2"><strong class="text-dark">Description:</strong> <span class="text-dark">{{ bug.description }}</span></div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong class="text-dark">Severity:</strong> <span class="badge bg-warning text-dark">{{ bug.get_severity_display }}</span></div>
+                    <div class="col-md-6"><strong class="text-dark">Status:</strong> <span class="badge bg-info text-dark">{{ bug.get_status_display }}</span></div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-6"><strong class="text-dark">Category:</strong> <span class="text-dark">{{ bug.get_category_display }}</span></div>
+                    <div class="col-md-6"><strong class="text-dark">Created At:</strong> <span class="text-dark">{{ bug.created_at|date:'Y-m-d H:i' }}</span></div>
+                </div>
+                <div class="mb-2"><strong class="text-dark">SPLab Number:</strong> <span class="text-dark">{{ bug.splab_number }}</span></div>
+                {% if request.user.is_authenticated and request.user.email == bug.email %}
+                <div class="row mb-2">
+                    <div class="col-md-4"><strong class="text-dark">Full Name:</strong> <span class="text-dark">{{ bug.full_name }}</span></div>
+                    <div class="col-md-4"><strong class="text-dark">Email:</strong> <span class="text-dark">{{ bug.email }}</span></div>
+                    <div class="col-md-4"><strong class="text-dark">Phone:</strong> <span class="text-dark">{{ bug.phone }}</span></div>
+                </div>
+                {% endif %}
+                <a href="{% url 'bug_list' %}" class="btn btn-outline-secondary mt-2 mb-4"><i class="fas fa-arrow-left me-1"></i>Back to Bugs</a>
+                <hr>
+                <h5 class="mt-4"><i class="fas fa-file-alt me-2"></i>Logs</h5>
+                <div class="mb-3">{{ bug.logs|linebreaksbr }}</div>
+                <h5><i class="fas fa-tools me-2"></i>Tools Used</h5>
+                <div class="mb-3">{{ bug.tools_used|linebreaksbr }}</div>
+                <h5><i class="fas fa-photo-video me-2"></i>Media Files</h5>
+                <ul class="list-unstyled mb-3">
+                    {% for media in bug.media_files.all %}
+                        <li class="mb-2">
+                            {% if media.file.url %}
+                                {% with media.file.url|lower as url %}
+                                    {% if ".jpg" in url or ".jpeg" in url or ".png" in url or ".gif" in url %}
+                                        <img src="{{ media.file.url }}" alt="media" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                                    {% elif ".mp4" in url or ".webm" in url or ".mov" in url %}
+                                        <video controls class="img-thumbnail" style="max-width: 200px; max-height: 150px;"><source src="{{ media.file.url }}"></video>
+                                    {% else %}
+                                        <a href="{{ media.file.url }}" class="link-primary">{{ media.file.name }}</a>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li class="text-muted">No media files uploaded.</li>
+                    {% endfor %}
+                </ul>
+                <h5><i class="fas fa-code me-2"></i>Code Files</h5>
+                <ul class="list-unstyled mb-3">
+                    {% for code in bug.code_files.all %}
+                        <li><a href="{{ code.file.url }}" class="link-primary">{{ code.file.name }}</a></li>
+                    {% empty %}
+                        <li class="text-muted">No code files uploaded.</li>
+                    {% endfor %}
+                </ul>
+                <h5><i class="fas fa-globe me-2"></i>Website URLs</h5>
+                <ul class="list-unstyled mb-3">
+                    {% for site in bug.websites.all %}
+                        <li><a href="{{ site.url }}" target="_blank" class="link-primary">{{ site.url }}</a></li>
+                    {% empty %}
+                        <li class="text-muted">No websites provided.</li>
+                    {% endfor %}
+                </ul>
+                <h5><i class="fas fa-history me-2"></i>Related Logs</h5>
+                <ul class="list-unstyled mb-3">
+                    {% for log in bug.logs.all %}
+                        <li><a href="/logs/{{ log.id }}/" class="link-primary">{{ log.title }}</a> <span class="text-muted">({{ log.timestamp|date:'Y-m-d H:i' }})</span></li>
+                    {% empty %}
+                        <li class="text-muted">No logs for this bug.</li>
+                    {% endfor %}
+                </ul>
+                <h5><i class="fas fa-photo-video me-2"></i>Related Media</h5>
+                <ul class="list-unstyled mb-3">
+                    {% for media in bug.media_files.all %}
+                        <li><a href="/mediafiles/{{ media.id }}/" class="link-primary">Media {{ media.id }}</a> <span class="text-muted">({{ media.uploaded_at|date:'Y-m-d H:i' }})</span></li>
+                    {% empty %}
+                        <li class="text-muted">No media files for this bug.</li>
+                    {% endfor %}
+                </ul>
+                <h5><i class="fas fa-tools me-2"></i>Tools Used</h5>
+                <div class="mb-3">{{ bug.tools_used|linebreaksbr }}</div>
+                <h5><i class="fas fa-check-circle me-2"></i>Successful Fixes</h5>
+                <ul class="list-unstyled mb-3">
+                    {% for fix in bug.successful_fixes.all %}
+                        <li>
+                            <a href="{% url 'successful_fixed_detail' fix.id %}" class="link-success">Fixed at {{ fix.fixed_at|date:'Y-m-d H:i' }}</a>
+                            <span class="text-muted">- {{ fix.description|truncatechars:50 }}</span>
+                        </li>
+                    {% empty %}
+                        <li class="text-muted">No successful fixes for this bug.</li>
+                    {% endfor %}
+                </ul>
+                {% if bug.successful_fixes.count %}
+                <span class="badge bg-success px-3 py-2 fs-6"><i class="fas fa-check-circle me-1"></i>Fixed</span>
+                {% else %}
+                <span class="badge bg-danger px-3 py-2 fs-6"><i class="fas fa-times-circle me-1"></i>Not Fixed</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

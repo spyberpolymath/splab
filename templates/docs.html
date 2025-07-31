@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <h1>🧪 Splab Elite Hacker Lab Documentation</h1>
+        <p class="lead">A unified dashboard to organize, track, and optimize every aspect of your cybersecurity lab projects.</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+            <a href="{% url 'contact' %}" class="btn btn-outline-primary">✉️ Contact</a>
+            <a href="{% url 'usage' %}" class="btn btn-outline-secondary">📘 Usage</a>
+            <a href="{% url 'setup' %}" class="btn btn-outline-secondary">⚙️ Setup</a>
+        </div>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🐞 Bug Tracking</h5>
+                    <p class="card-text">Log, track, and resolve bugs efficiently. Assign issues, set priorities, and monitor progress. View bug details, create new bug reports, and keep your lab workflow smooth.</p>
+                    <blockquote class="blockquote mb-0">
+                        <p>Every bug you find is one less to worry about.</p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <!-- Log Management Card -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📝 Log Management</h5>
+                    <p class="card-text">Record, view, and manage lab activity logs. Keep a detailed history of actions, changes, and events for better traceability and auditing.</p>
+                    <blockquote class="blockquote mb-0">
+                        <p>Every action leaves a trace.</p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🛠️ Tool Management</h5>
+                    <p class="card-text">Maintain an organized inventory of lab tools. Add, update, and track tool usage and availability. Link tools to bugs and reports for better traceability.</p>
+                    <blockquote class="blockquote mb-0">
+                        <p>The right tool makes the job easy.</p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🖼️ Media Files</h5>
+                    <p class="card-text">Upload, manage, and view media files related to your lab work. Attach images and documents to bugs, tools, and reports to keep all your project assets in one place.</p>
+                    <blockquote class="blockquote mb-0">
+                        <p>A picture is worth a thousand words.</p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">✉️ Contact & Support</h5>
+                    <p class="card-text">Reach out for help, feedback, or collaboration. Submit contact messages directly from the dashboard and get support for your lab management journey.</p>
+                    <blockquote class="blockquote mb-0">
+                        <p>Communication leads to community.</p>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5 loading">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header text-white text-center py-4"
+                    style="background: linear-gradient(135deg, var(--primary-navy) 0%, var(--accent-blue) 100%); border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-check-circle me-2"></i>Successful Fix Detail</h2>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item"><strong>Bug:</strong> {{ fix.bug.title }}</li>
+                        <li class="list-group-item"><strong>Media Files:</strong>
+                        <ul>
+                        {% for media in fix.bug.media_files.all %}
+                            <li>
+                                {% if media.file.url %}
+                                    {% with media.file.url|lower as url %}
+                                        {% if ".jpg" in url or ".jpeg" in url or ".png" in url or ".gif" in url %}
+                                            <img src="{{ media.file.url }}" alt="media" style="max-width: 200px; max-height: 150px;">
+                                        {% elif ".mp4" in url or ".webm" in url or ".mov" in url %}
+                                            <video controls style="max-width: 200px; max-height: 150px;"><source src="{{ media.file.url }}"></video>
+                                        {% else %}
+                                            <a href="{{ media.file.url }}">{{ media.file.name }}</a>
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endif %}
+                            </li>
+                        {% empty %}
+                            <li>No media files uploaded.</li>
+                        {% endfor %}
+                        </ul>
+                        </li>
+                        <li class="list-group-item"><strong>Code Files:</strong>
+                            <ul>
+                            {% for code in fix.bug.code_files.all %}
+                                <li><a href="{{ code.file.url }}">{{ code.file.name }}</a></li>
+                            {% empty %}
+                                <li>No code files uploaded.</li>
+                            {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="list-group-item"><strong>Website URLs:</strong>
+                            <ul>
+                            {% for site in fix.bug.websites.all %}
+                                <li><a href="{{ site.url }}" target="_blank">{{ site.url }}</a></li>
+                            {% empty %}
+                                <li>No websites provided.</li>
+                            {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="list-group-item"><strong>Logs:</strong><br>{{ fix.bug.logs|linebreaksbr }}</li>
+                        <li class="list-group-item"><strong>Tools Used:</strong><br>{{ fix.bug.tools_used|linebreaksbr }}</li>
+                        <li class="list-group-item"><strong>Description:</strong> {{ fix.description }}</li>
+                        <li class="list-group-item"><strong>Category:</strong> {{ fix.get_category_display }}</li>
+                        <li class="list-group-item"><strong>Fixed At:</strong> {{ fix.fixed_at|date:'Y-m-d H:i' }}</li>
+                        <li class="list-group-item"><strong>SPLab Number:</strong> {{ fix.splab_number }}</li>
+                        {% if request.user.is_authenticated and request.user.email == fix.email %}
+                        <li class="list-group-item"><strong>Full Name:</strong> {{ fix.full_name }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ fix.email }}</li>
+                        <li class="list-group-item"><strong>Phone:</strong> {{ fix.phone }}</li>
+                        {% elif request.user.is_authenticated and request.user.email == fix.bug.email %}
+                        <li class="list-group-item"><strong>Full Name:</strong> {{ fix.full_name }}</li>
+                        <li class="list-group-item"><strong>Email:</strong> {{ fix.email }}</li>
+                        <li class="list-group-item"><strong>Phone:</strong> {{ fix.phone }}</li>
+                        {% endif %}
+                        {% if fix.evidence_media %}
+                        <li class="list-group-item"><strong>Evidence Image/Video:</strong>
+                            {% with fix.evidence_media.url|lower as url %}
+                                {% if ".jpg" in url or ".jpeg" in url or ".png" in url or ".gif" in url %}
+                                    <img src="{{ fix.evidence_media.url }}" alt="evidence" style="max-width: 200px; max-height: 150px;">
+                                {% elif ".mp4" in url or ".webm" in url or ".mov" in url %}
+                                    <video controls style="max-width: 200px; max-height: 150px;"><source src="{{ fix.evidence_media.url }}"></video>
+                                {% else %}
+                                    <a href="{{ fix.evidence_media.url }}">{{ fix.evidence_media.name }}</a>
+                                {% endif %}
+                            {% endwith %}
+                        </li>
+                        {% endif %}
+                        {% if fix.evidence_code %}
+                        <li class="list-group-item"><strong>Evidence Code File:</strong> <a href="{{ fix.evidence_code.url }}">{{ fix.evidence_code.name }}</a></li>
+                        {% endif %}
+                    </ul>
+                    {% if not fix.bug.successful_fixes.count %}
+                    <div class="alert alert-warning mt-4">This bug is not fixed yet. <a href="{% url 'successful_fixed_create' %}?bug={{ fix.bug.id }}" class="btn btn-primary btn-sm">Add Successful Fix</a></div>
+                    {% endif %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{% url 'successful_fixed_list' %}" class="btn btn-secondary btn-lg fw-bold px-4">Back to List</a>
+                    </div>
+                </div>
+                <div class="card-footer text-center bg-light py-3"
+                    style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <p class="mb-0 text-muted">Thank you for contributing to SPLab Bug Tracker.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

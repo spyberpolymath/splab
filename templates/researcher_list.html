@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-primary">Security Researchers</h2>
+    <form method="get" class="row g-3 mb-4 align-items-end">
+        <div class="col-md-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category">
+                <option value="">All</option>
+                {% for cat in categories %}
+                <option value="{{ cat }}" {% if filter_category == cat %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="bug_type" class="form-label">Bug Type</label>
+            <select class="form-select" id="bug_type" name="bug_type">
+                <option value="">All</option>
+                {% for bt in bug_types %}
+                <option value="{{ bt }}" {% if filter_bug_type == bt %}selected{% endif %}>{{ bt|title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="search" class="form-label">Search</label>
+            <input type="text" class="form-control" id="search" name="search" placeholder="Search anything..."
+                value="{{ search_query }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Filter</button>
+        </div>
+    </form>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">S.No</th>
+                        <th scope="col">SPLF ID</th>
+                        <th scope="col">Bug Type</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for researcher in researchers %}
+                    <tr>
+                        <th scope="row">{{ researcher.sno }}</th>
+                        <td>{{ researcher.splf_id|default:'—' }}</td>
+                        <td>{{ researcher.bug_type|title|default:'—' }}</td>
+                        <td>{{ researcher.category }}</td>
+                        <td>
+                            {% if researcher.category == 'Fixer' %}
+                                <a href="{% url 'researcher_detail' 'fixer' researcher.fix_id %}" class="btn btn-outline-info btn-sm">Details</a>
+                            {% else %}
+                                <a href="{% url 'researcher_detail' 'reporter' researcher.bug_id %}" class="btn btn-outline-info btn-sm">Details</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No researchers found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

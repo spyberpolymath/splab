@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5 loading">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header text-white text-center py-4"
+                    style="background: linear-gradient(135deg, var(--primary-navy) 0%, var(--accent-blue) 100%); border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-list-check me-2"></i>Successful Fixes</h2>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form method="get" class="mb-4">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-auto">
+                                <label for="category" class="form-label">Category:</label>
+                                <select name="category" id="category" class="form-select">
+                                    <option value="">All</option>
+                                    {% for value, label in categories %}
+                                        <option value="{{ value }}" {% if current_category == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="status" class="form-label">Status:</label>
+                                <select name="status" id="status" class="form-select">
+                                    <option value="">All</option>
+                                    <option value="fixed" {% if current_status == 'fixed' %}selected{% endif %}>Fixed</option>
+                                    <option value="not_fixed" {% if current_status == 'not_fixed' %}selected{% endif %}>Not Fixed</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <label for="search" class="form-label">Search:</label>
+                                <input type="text" name="search" id="search" class="form-control" value="{{ current_search }}" placeholder="Bug title...">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary fw-bold"><i class="fas fa-filter me-1"></i>Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Bug Title</th>
+                                    <th>Category</th>
+                                    <th>Creator SPLab ID</th>
+                                    <th>Fixed SPLab ID</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bug in bugs %}
+                                <tr>
+                                    <td>{{ bug.title }}</td>
+                                    <td>{{ bug.get_category_display }}</td>
+                                    <td>{{ bug.splab_number }}</td>
+                                    <td>{% if bug.successful_fixes.count %}{{ bug.successful_fixes.first.splab_number }}{% else %}-{% endif %}</td>
+                                    <td>{% if bug.successful_fixes.count %}<span class="badge bg-success">Fixed</span>{% else %}<span class="badge bg-danger">Not Fixed</span>{% endif %}</td>
+                                    <td>
+                                        <a href="{% url 'successful_fixed_create' %}?bug={{ bug.id }}" class="btn btn-secondary btn-sm">View Details</a>
+                                        {% if user_email and user_email == bug.email and not bug.successful_fixes.count %}
+                                            <a href="{% url 'successful_fixed_create' %}?bug={{ bug.id }}" class="btn btn-primary btn-sm">Add Successful Fix</a>
+                                        {% elif bug.successful_fixes.count %}
+                                            <a href="{% url 'successful_fixed_detail' bug.successful_fixes.first.id %}" class="btn btn-info btn-sm">View Fix</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="6" class="text-center">No bugs found.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer text-center bg-light py-3"
+                    style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <p class="mb-0 text-muted">Thank you for contributing to SPLab Bug Tracker.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

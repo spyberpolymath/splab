@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5 loading">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-header text-white text-center py-4"
+                    style="background: linear-gradient(135deg, var(--primary-navy) 0%, var(--accent-blue) 100%); border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                    <h2 class="mb-0 fw-bold"><i class="fas fa-bug me-2"></i>{{ title }}</h2>
+                    <p class="mb-0 opacity-75">Please fill out the form to report a bug.</p>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-success d-flex align-items-center shadow-sm" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <div>{{ message }}</div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold px-4"
+                                style="background: var(--primary-navy); border-color: var(--primary-navy); transition: all 0.3s ease;">
+                                <i class="fas fa-paper-plane me-2"></i>Submit
+                            </button>
+                            <a href="{{ cancel_url }}" class="btn btn-secondary btn-lg fw-bold px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center bg-light py-3"
+                    style="border-bottom-left-radius: 1rem; border-bottom-right-radius: 1rem;">
+                    <p class="mb-0 text-muted">Thank you for helping us improve SPLab Bug Tracker.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

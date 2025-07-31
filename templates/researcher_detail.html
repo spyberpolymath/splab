@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4 text-primary">Researcher Details</h2>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Researcher Information</h5>
+            <dl class="row mb-0">
+                <dt class="col-sm-3">SPLF ID</dt>
+                <dd class="col-sm-9">{{ researcher.splf_id|default:'—' }}</dd>
+                <dt class="col-sm-3">Bug Type</dt>
+                <dd class="col-sm-9">{{ researcher.bug_type|title|default:'—' }}</dd>
+                <dt class="col-sm-3">Category</dt>
+                <dd class="col-sm-9">{{ researcher.category }}</dd>
+                <dt class="col-sm-3">Full Name</dt>
+                <dd class="col-sm-9">{{ researcher.full_name|default:'—' }}</dd>
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">{{ researcher.email|default:'—' }}</dd>
+                <dt class="col-sm-3">Phone</dt>
+                <dd class="col-sm-9">{{ researcher.phone|default:'—' }}</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">Bug Information</div>
+                <div class="card-body">
+                    {% if researcher.bug %}
+                        <dl class="row mb-0">
+                            <dt class="col-sm-5">Bug Title</dt>
+                            <dd class="col-sm-7">{{ researcher.bug.title }}</dd>
+                            <dt class="col-sm-5">Description</dt>
+                            <dd class="col-sm-7">{{ researcher.bug.description }}</dd>
+                            <dt class="col-sm-5">Severity</dt>
+                            <dd class="col-sm-7">{{ researcher.bug.severity|title }}</dd>
+                            <dt class="col-sm-5">Category</dt>
+                            <dd class="col-sm-7">{{ researcher.bug.category|title }}</dd>
+                            <dt class="col-sm-5">Status</dt>
+                            <dd class="col-sm-7">{{ researcher.bug.status|title }}</dd>
+                            <dt class="col-sm-5">Reported At</dt>
+                            <dd class="col-sm-7">{{ researcher.bug.created_at }}</dd>
+                        </dl>
+                    {% else %}
+                        <p class="text-muted">No bug information available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">Successful Fixed Information</div>
+                <div class="card-body">
+                    {% if researcher.fix %}
+                        <dl class="row mb-0">
+                            <dt class="col-sm-5">SPLF ID</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.splab_number }}</dd>
+                            <dt class="col-sm-5">Description</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.description }}</dd>
+                            <dt class="col-sm-5">Fixed At</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.fixed_at }}</dd>
+                            <dt class="col-sm-5">Category</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.category|title }}</dd>
+                            <dt class="col-sm-5">Fixed By</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.full_name|default:'—' }}</dd>
+                            <dt class="col-sm-5">Email</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.email|default:'—' }}</dd>
+                            <dt class="col-sm-5">Phone</dt>
+                            <dd class="col-sm-7">{{ researcher.fix.phone|default:'—' }}</dd>
+                        </dl>
+                        {% if researcher.fix.evidence_media %}
+                        <div class="mt-3">
+                            <strong>Evidence Media:</strong><br>
+                            <a href="{{ researcher.fix.evidence_media.url }}" target="_blank">View Media</a>
+                        </div>
+                        {% endif %}
+                        {% if researcher.fix.evidence_code %}
+                        <div class="mt-2">
+                            <strong>Evidence Code:</strong><br>
+                            <a href="{{ researcher.fix.evidence_code.url }}" target="_blank">Download Code</a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">No successful fix information available.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'researcher_list' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to List</a>
+</div>
+{% endblock %} 
