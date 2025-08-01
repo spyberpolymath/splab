@@ -143,14 +143,6 @@ python manage.py runserver
 
 ---
 
-## 🤝 Contribution & Support
-
-- **Contact:** Use the in-app contact form or open an issue
-- **Admin:** Access Django admin at `/admin/`
-- **Testing:** (Basic test structure in place; expand as needed)
-
----
-
 ## 🏆 Credits & Motivation
 
 > _Stay curious, keep building, and never stop learning. The future belongs to those who create it._
